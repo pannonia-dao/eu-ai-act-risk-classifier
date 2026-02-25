@@ -24,8 +24,8 @@ def css(dark: bool) -> str:
     if dark:
         t = dict(
             bg="#111318", surface="#1C1F29", border="#2A2D3A",
-            text="#ECEEF5", sub="#8B90A8", muted="#50546A",
-            accent="#5B8DF6", accent_dim="#1A2440",
+            text="#ECEEF5", sub="#8B90A8", muted="#50546A", border2="#3A3F5C",
+            accent="#5B8DF6", accent_dim="#1A2440", accent_hover="#4070E8",
             red="#F26B7A",   red_dim="#2A0F14",
             orange="#F5924A",orange_dim="#2A1400",
             yellow="#E8C54A",yellow_dim="#261F00",
@@ -34,8 +34,8 @@ def css(dark: bool) -> str:
     else:
         t = dict(
             bg="#F8F9FC", surface="#FFFFFF", border="#E4E7EF",
-            text="#1A1D2E", sub="#5A6080", muted="#9BA3BF",
-            accent="#2B5CE6", accent_dim="#EEF3FD",
+            text="#1A1D2E", sub="#5A6080", muted="#9BA3BF", border2="#C8CDDE",
+            accent="#2B5CE6", accent_dim="#EEF3FD", accent_hover="#1E4ED8",
             red="#D93553",   red_dim="#FDF0F2",
             orange="#D9680A",orange_dim="#FFF5EC",
             yellow="#9A7A05",yellow_dim="#FEFCE8",
@@ -64,6 +64,22 @@ p  {{ color: {t['sub']} !important; margin: 0; }}
 /* toggle */
 .top-row {{ display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }}
 
+/* theme toggle button */
+button[data-testid="baseButton-secondary"][kind="secondary"] {{
+    background: {t['surface']} !important;
+    border: 1.5px solid {t['border']} !important;
+    border-radius: 8px !important;
+    color: {t['text']} !important;
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    padding: 0.35rem 0.7rem !important;
+    transition: all 0.15s;
+}}
+button[data-testid="baseButton-secondary"][kind="secondary"]:hover {{
+    border-color: {t['accent']} !important;
+    background: {t['accent_dim']} !important;
+}}
+
 /* section label */
 .sec-label {{
     font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
@@ -83,14 +99,22 @@ p  {{ color: {t['sub']} !important; margin: 0; }}
 
 /* submit */
 div[data-testid="stFormSubmitButton"] > button {{
-    width: 100%; background: {t['accent']} !important; color: #fff !important;
+    width: 100% !important; background: {t['accent']} !important;
+    color: #ffffff !important;
     border: none !important; border-radius: 8px !important;
-    font-size: 0.9rem !important; font-weight: 600 !important;
-    padding: 0.65rem !important; letter-spacing: 0.01em;
-    box-shadow: 0 2px 12px {t['accent']}44 !important;
-    transition: opacity 0.15s;
+    font-size: 1rem !important; font-weight: 700 !important;
+    padding: 0.78rem 1.5rem !important; letter-spacing: 0.015em;
+    box-shadow: 0 2px 16px {t['accent']}55 !important;
+    transition: all 0.15s ease;
 }}
-div[data-testid="stFormSubmitButton"] > button:hover {{ opacity: 0.88 !important; }}
+div[data-testid="stFormSubmitButton"] > button:hover {{
+    background: {t['accent_hover']} !important;
+    box-shadow: 0 4px 22px {t['accent']}77 !important;
+    transform: translateY(-1px);
+}}
+div[data-testid="stFormSubmitButton"] > button p {{
+    color: #ffffff !important; font-size: 1rem !important; font-weight: 700 !important;
+}}
 
 /* result badge */
 .badge {{
@@ -181,12 +205,47 @@ div[data-testid="stFormSubmitButton"] > button:hover {{ opacity: 0.88 !important
 
 /* download */
 .stDownloadButton > button {{
-    background: {t['surface']} !important; color: {t['sub']} !important;
-    border: 1px solid {t['border']} !important; border-radius: 7px !important;
-    font-size: 0.82rem !important; font-weight: 500 !important;
+    background: {t['surface']} !important; color: {t['text']} !important;
+    border: 1.5px solid {t['border2']} !important; border-radius: 8px !important;
+    font-size: 0.88rem !important; font-weight: 600 !important;
+    padding: 0.6rem 1rem !important;
+    transition: all 0.15s ease;
 }}
 .stDownloadButton > button:hover {{
+    background: {t['accent_dim']} !important;
     border-color: {t['accent']} !important; color: {t['accent']} !important;
+}}
+.stDownloadButton > button p {{
+    color: {t['text']} !important; font-size: 0.88rem !important; font-weight: 600 !important;
+}}
+.stDownloadButton > button:hover p {{
+    color: {t['accent']} !important;
+}}
+
+/* st.button (non-form) — theme toggle */
+.stButton > button {{
+    background: {t['surface']} !important;
+    color: {t['text']} !important;
+    border: 1.5px solid {t['border']} !important;
+    border-radius: 8px !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    padding: 0.4rem 0.8rem !important;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}}
+.stButton > button:hover {{
+    border-color: {t['accent']} !important;
+    color: {t['accent']} !important;
+    background: {t['accent_dim']} !important;
+}}
+.stButton > button p {{
+    color: {t['text']} !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+}}
+.stButton > button:hover p {{
+    color: {t['accent']} !important;
 }}
 
 /* st overrides */
@@ -376,17 +435,17 @@ def classify(a):
     return "minimal", flags, ["minimal"]
 
 # ── Render ─────────────────────────────────────────────────────────────────────
-# Top row: title + toggle
 col_title, col_toggle = st.columns([5, 1])
 with col_title:
     st.markdown('<div class="page-title">🇪🇺 EU AI Act Checker</div>', unsafe_allow_html=True)
-    st.markdown('<div class="page-sub">Risk classification under Regulation (EU) 2024/1689 — answers generate an article-linked obligation checklist.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="page-sub">Risk classification under Regulation (EU) 2024/1689 — answers generate an article-linked obligations checklist.</div>', unsafe_allow_html=True)
 with col_toggle:
-    st.markdown("<br>", unsafe_allow_html=True)
-    label = "☀️" if st.session_state.dark else "🌙"
-    if st.button(label, key="toggle", help="Toggle dark / light mode"):
+    st.markdown('<div style="margin-top:0.5rem;text-align:right;">', unsafe_allow_html=True)
+    icon = "☀️ Light" if st.session_state.dark else "🌙 Dark"
+    if st.button(icon, key="toggle", help="Toggle dark / light mode", use_container_width=True):
         st.session_state.dark = not st.session_state.dark
         st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ── Form ──────────────────────────────────────────────────────────────────────
 with st.form("form"):
